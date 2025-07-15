@@ -1,0 +1,37 @@
+random_forest:
+  # Best parameters found when tuned on baseline data.
+  # These same parameters are typically used for evaluating 
+  # Random Forest on SMOTE and ADASYN preprocessed data as well.
+  max_depth: 10
+  min_samples_leaf: 4
+  min_samples_split: 10
+  n_estimators: 100
+
+catboost:
+  # Best parameters found when tuned on baseline data.
+  # These same parameters are typically used for evaluating 
+  # CatBoost on SMOTE and ADASYN preprocessed data as well.
+  depth: 4
+  iterations: 200
+  learning_rate: 0.1
+
+ann_mlpclassifier:
+  # Best parameters found when the ANN (MLPClassifier) 
+  # was tuned on SMOTE preprocessed data.
+  # These same parameters are typically used for evaluating 
+  # the ANN on ADASYN preprocessed data as well.
+  activation: tanh
+  alpha: 0.001
+  hidden_layer_sizes: [100, 100] # Represented as a list in YAML
+  learning_rate_init: 0.01
+  solver: adam
+
+# Note on oversampling methods:
+# The parameters above for Random Forest and CatBoost are derived from tuning on the 
+# baseline (original scaled) training data. The same tuned model (with these parameters)
+# is then evaluated against data processed with SMOTE and ADASYN.
+
+# The parameters for ann_mlpclassifier are specifically from tuning on SMOTE-processed data.
+# This SMOTE-tuned ANN model is then typically evaluated against SMOTE and ADASYN-processed data.
+# If you were to tune the ANN separately on baseline or ADASYN data, 
+# you might get different optimal hyperparameters for those specific scenarios.

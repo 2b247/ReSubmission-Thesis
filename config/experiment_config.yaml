@@ -1,0 +1,116 @@
+# Configuration file for the University Dropout Prediction Pipeline
+
+# --- General Settings ---
+project_name: "University_Dropout_Prediction_Thesis"
+random_seed: 42 # For reproducibility
+
+# --- Data Source ---
+data_source:
+  file_path: "data/data.csv"
+  delimiter: ";"
+  target_column: "Target"
+  # Original classes: ['Dropout', 'Graduate', 'Enrolled']
+  # 'Enrolled' class is dropped for binary classification.
+  classes_to_use: ["Dropout", "Graduate"] 
+  # Map target labels to numerical if needed by models (e.g., Dropout:1, Graduate:0)
+  target_mapping: 
+    Dropout: 1
+    Graduate: 0
+
+# --- Data Preprocessing ---
+preprocessing:
+  # Columns identified for outlier capping using IQR method
+  outlier_capping_iqr:
+    apply: true
+    columns: 
+      - 'Age at enrollment'
+      - "Father's occupation" # Ensure exact column name from your dataset
+      - 'Curricular units 1st sem (enrolled)'
+      - 'Curricular units 2nd sem (enrolled)'
+    factor: 1.5
+  
+  # Train-test split configuration
+  train_test_split:
+    test_size: 0.2
+    stratify_by_target: true
+    random_state: 42 # Consistent with general random_seed
+
+  # Feature scaling (StandardScaler is applied before ANN training)
+  scaling:
+    method: "StandardScaler" 
+    apply_to_models: ["ANN"] # Specify models requiring scaled input
+
+# --- Class Imbalance Handling ---
+# Applied only to the training set within cross-validation folds
+class_imbalance:
+  methods_to_test: ["SMOTE", "ADASYN", "None"] # "None" for baseline
+  smote_params:
+    random_state: 42
+    # k_neighbors: 5 # Default, can be specified if tuned
+  adasyn_params:
+    random_state: 42
+    # n_neighbors: 5 # Default, can be specified if tuned
+
+# --- Model Training & Hyperparameter Tuning ---
+modeling:
+  models_to_run:
+    - "RandomForest"
+    - "CatBoost"
+    - "ANN" # (MLPClassifier)
+
+  # Hyperparameter tuning settings
+  hyperparameter_tuning:
+    method: "GridSearchCV"
+    cv_folds: 5
+    cv_stratified: true # Uses StratifiedKFold
+    scoring_metric: "f1_macro" # Primary metric for tuning
+    n_jobs: -1 # Use all available cores
+    verbose_level: 1 # Verbosity for GridSearchCV
+
+  # Parameter grids for GridSearchCV (comprehensive versions)
+  parameter_grids:
+    RandomForest:
+      n_estimators: [100, 200, 300]
+      max_depth: [10, 20, 30, null]
+      min_samples_split: [2, 5, 10]
+      min_samples_leaf: [1, 2, 4]
+      # class_weight: ['balanced'] # This was in model init, not grid in notebook
+      
+    CatBoost:
+      iterations: [100, 200, 300] # Or [100, 200, 300, 500] if more extensive
+      learning_rate: [0.01, 0.05, 0.1]
+      depth: [4, 6, 8, 10] 
+      # l2_leaf_reg: [1, 3, 5] # Example, if tuned
+      # auto_class_weights: ['Balanced'] # This was in model init
+
+    ANN: # MLPClassifier parameters
+      hidden_layer_sizes: 
+        - [50]        # Single layer, 50 neurons
+        - [100]       # Single layer, 100 neurons
+        - [50, 50]    # Two layers, 50 neurons each
+        - [100, 50]   # Two layers
+        - [100, 100]  # Two layers
+      activation: ['relu', 'tanh']
+      solver: ['adam', 'sgd']
+      alpha: [0.0001, 0.001, 0.01] # L2 regularization term
+      learning_rate_init: [0.0005, 0.001, 0.01]
+      # max_iter: 1000 # Fixed in notebook during tuning setup
+      # early_stopping: true # Fixed in notebook
+      # n_iter_no_change: 20 # Fixed in notebook
+
+# --- Evaluation ---
+evaluation:
+  primary_metric: "f1_macro_weighted" # Or "f1_macro" if preferred for final reporting
+  secondary_metrics:
+    - "roc_auc_macro"
+    - "accuracy"
+    - "precision_per_class" # Will show for Dropout and Graduate
+    - "recall_per_class"    # Will show for Dropout and Graduate
+  generate_confusion_matrix: true
+  # Error analysis settings (optional, if automated)
+  # error_analysis:
+  #   subgroups: ['Age at enrollment', 'Gender', 'Scholarship holder'] # Example subgroups
+
+# --- Output Directory ---
+output_dir: "results/" # Base directory for saving run results, models, plots etc.
+
