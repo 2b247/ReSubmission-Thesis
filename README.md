@@ -1,110 +1,71 @@
-# 🎓 Thesis Project: Predicting University Dropout with Machine Learning
+# Where Did the Students Go?  
+### A Machine Learning Approach to Student Dropout Prediction
 
-This repository contains the code, data structure, and experimental setup for my MSc thesis:  
-**"Beyond Questionnaires: Using Physiological Markers to Enhance Mental Health Predictions."**
+## 🔍 Overview
 
-## 📌 Abstract
+This repository contains all code, data processing pipelines, and modeling scripts used in the master's thesis titled **“Where Did the Students Go? A Machine Learning Approach to Student Dropout Prediction”** by Tobias Benavides, completed as part of the MSc in Data Science & Society at Tilburg University.
 
-This thesis investigates the use of physiological markers as predictors for mental health conditions such as anxiety and depression. Using the NIMH Healthy Research Volunteer Dataset, we compare the predictive performance of various machine learning models trained on:
+The thesis explores how different machine learning models perform on the task of predicting student dropout from a Portuguese university, with a special focus on the impact of oversampling techniques on imbalanced classification.
 
-- Self-report questionnaire data  
-- Physiological markers (e.g., heart rate variability, skin conductance)  
-- Combined inputs
+## 🎓 Thesis Abstract
 
-The results show that models using physiological data can match or outperform traditional methods, suggesting that biometric signals may enhance mental health screening and intervention strategies.
+University dropout is a phenomenon with far-reaching implications for individuals and societies. This study investigates how machine learning algorithms combined with oversampling methods can improve predictive performance on dropout classification tasks using a real-world educational dataset. Nine model configurations were tested by combining three algorithms—Random Forest, CatBoost, and Artificial Neural Networks (ANN)—with three oversampling settings (None, SMOTE, ADASYN). CatBoost combined with ADASYN yielded the best performance (F1 = 0.9224). The study highlights the importance of selecting appropriate oversampling strategies tailored to specific models.
 
----
+## 📁 Project Structure
 
-## 🗂 Repository Structure
+ReSubmission-Thesis/
+│
+├── data/ # Contains raw and preprocessed datasets
+├── models/ # Trained model files (optional if shared)
+├── notebooks/ # Jupyter Notebooks with EDA and modeling
+├── figures/ # Visuals used in the thesis (e.g., SHAP, PCA)
+├── thesis/ # LaTeX source files of the thesis
+├── requirements.txt # List of Python packages used
+├── FinalVersion.ipynb # Final notebook with full pipeline
+└── README.md # You are here
 
-```plaintext
-.
-├── data/                       # Data files and processing scripts (excluded in .gitignore)
-├── notebooks/                 # Jupyter notebooks with experiments
-├── scripts/                   # Python modules (preprocessing, training, evaluation, etc.)
-├── results/                   # Model outputs and performance logs
-├── configs/
-│   └── hyperparameters.yaml   # Tuned hyperparameters for all models
-├── main.py                    # Main experiment runner
-├── requirements.txt           # Environment dependencies
-├── README.md                  # Project overview (this file)
-└── .gitignore                 # Files to ignore in Git
-⚙️ Models Implemented
-Random Forest
 
-Support Vector Machine (SVM)
+## 🧠 Models Used
 
-CatBoost
+- **Random Forest** (via `scikit-learn`)
+- **CatBoost** (via `catboost`)
+- **Artificial Neural Networks** (via `Keras` and `TensorFlow`)
 
-Artificial Neural Network (ANN)
+## ⚖️ Oversampling Techniques
 
-ANN + SMOTE
+- **SMOTE** (Synthetic Minority Oversampling Technique)
+- **ADASYN** (Adaptive Synthetic Sampling)
 
-ANN + ADASYN
+These were implemented using the `imbalanced-learn` Python package.
 
-LLM (Zero-shot & Few-shot prompting)
+## 📊 Key Findings
 
-📈 Evaluation Metrics
-F1 Score
+- CatBoost + ADASYN achieved the best F1 Score (0.9224) and lowest Log Loss (0.2670).
+- SMOTE yielded more stable improvements across most models.
+- ANN performance degraded under ADASYN, likely due to sensitivity to synthetic noise.
+- Oversampling should be selected based on model type—no one-size-fits-all.
 
-Accuracy
+## 📌 Dataset
 
-ROC AUC
+- Source: UCI Machine Learning Repository  
+- Name: **Predict Students Dropout and Academic Success**  
+- Link: [https://archive.ics.uci.edu/ml/datasets/Predict+Students+Dropout+and+Academic+Success](https://archive.ics.uci.edu/ml/datasets/Predict+Students+Dropout+and+Academic+Success)  
+- Size: ~4,424 records (post-cleaning: 3,630 samples)
 
-Confusion Matrix
+## 🧪 Evaluation Metrics
 
-Price Quantile Error Analysis
+- F1-Score (Primary Metric)
+- Accuracy
+- Precision
+- Recall
+- ROC-AUC
+- Log Loss
+- Confusion Matrix
+- SHAP Interpretability
 
-🔧 Getting Started
-Clone this repository:
+## 🔧 Setup Instructions
 
-bash
-Copy
-Edit
-git clone https://github.com/yourusername/thesis-project.git
-cd thesis-project
-Install dependencies:
-
-bash
-Copy
-Edit
-pip install -r requirements.txt
-Run the main experiment pipeline:
-
-bash
-Copy
-Edit
-python main.py
-🧪 Dependencies
-See requirements.txt for full package list. Main libraries include:
-
-scikit-learn
-
-tensorflow
-
-catboost
-
-shap
-
-matplotlib
-
-seaborn
-
-pandas
-
-numpy
-
-📄 License
-This project is part of the MSc in Data Science and Society at Tilburg University.
-© 2025 Tobias Benavides. All rights reserved.
-
-📬 Contact
-Feel free to reach out via LinkedIn or open an issue in this repository.
-
-yaml
-Copy
-Edit
-
----
-
-Let me know if you'd like to tailor the tone more formally, or adapt this for Overleaf, GitHub Pages, or an academic CV site.
+1. **Clone the repository**
+```bash
+git clone https://github.com/2b247/ReSubmission-Thesis.git
+cd ReSubmission-Thesis
